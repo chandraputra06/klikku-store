@@ -112,7 +112,131 @@
     </div>
 </header>
 
+<!-- Why -->
+<section id="why" class="py-5 bg-light border-top border-bottom">
+    <div class="container">
+        <div class="text-center mb-4">
+            <h2 class="fw-bold">Kenapa belanja di KlikkuStore?</h2>
+            <p class="text-secondary mb-0">Fitur penting yang bikin belanja lebih nyaman.</p>
+        </div>
 
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4 text">
+                        <div class="badge text-bg-primary mb-3">Cepat</div>
+                        <h5 class="fw-bold">Checkout Simpel</h5>
+                        <p class="text-secondary mb-0">Proses belanja ringkas dan mudah untuk dipahami.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="badge text-bg-success mb-3">Aman</div>
+                        <h5 class="fw-bold">Transaksi aman</h5>
+                        <p class="text-secondary mb-0">Pembayaran aman dengan banyak metode.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="badge text-bg-warning mb-3">Hemat</div>
+                        <h5 class="fw-bold">Promo rutin</h5>
+                        <p class="text-secondary mb-0">Diskon dan voucher untuk produk tertentu.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
+<!-- Products -->
+<section id="products" class="py-5">
+    <div class="container">
+        <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-4">
+            <div>
+                <h2 class="fw-bold mb-1">Produk Terbaru</h2>
+                <p class="text-secondary mb-0">Berikut beberapa produk terbaru dari toko kami.</p>
+            </div>
+            <a href="#" class="btn btn-outline-secondary">Lihat Semua</a>
+        </div>
+
+        @if($products->isEmpty())
+            <div class="alert alert-warning mb-0">
+                Belum ada produk. Coba tambahkan produk dulu lewat seeder atau endpoint API.
+            </div>
+        @else
+            <div class="row g-4">
+                @foreach($products as $product)
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="ratio ratio-1x1 bg-secondary-subtle rounded-top"></div>
+
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start gap-2">
+                                    <h6 class="fw-bold mb-1">{{ $product->name }}</h6>
+
+                                    @if($product->stock_quantity <= 0)
+                                        <span class="badge text-bg-danger">Habis</span>
+                                    @else
+                                        <span class="badge text-bg-success">Ready</span>
+                                    @endif
+                                </div>
+
+                                <div class="text-primary fw-semibold mt-2">
+                                    Rp {{ number_format($product->price, 0, ',', '.') }}
+                                </div>
+
+                                <div class="small text-secondary mt-1">
+                                    Stok: {{ $product->stock_quantity }}
+                                </div>
+                            </div>
+
+                            <div class="card-footer bg-white border-0 pt-0 pb-3 px-3">
+                                <button class="btn btn-primary w-100" {{ $product->stock_quantity <= 0 ? 'disabled' : '' }}>
+                                    Tambah ke Keranjang
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @endif
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="py-5">
+    <div class="container">
+        <div class="p-5 rounded-4 bg-primary text-white">
+            <div class="row align-items-center g-3">
+                <div class="col-lg-8">
+                    <h3 class="fw-bold mb-1">Siap belanja lebih mudah?</h3>
+                    <p class="mb-0 opacity-75">Daftar sekarang dan dapatkan voucher untuk pengguna baru.</p>
+                </div>
+                <div class="col-lg-4 text-lg-end">
+                    <a href="#" class="btn btn-light btn-lg">Daftar Sekarang</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="border-top bg-white">
+    <div class="container py-4">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-6 text-secondary">
+                <div class="fw-semibold text-dark">KlikkuStore</div>
+                <div class="small">Belanja cepat, aman, dan hemat.</div>
+            </div>
+            <div class="col-md-6 text-md-end small text-secondary">
+                &copy; 2026 KlikkuStore. All rights reserved.
+            </div>
+        </div>
+    </div>
+</footer>
 </body>
 </html>
