@@ -6,116 +6,114 @@ use App\Models\Product;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Models\Category;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::get();
-        return response()->json([
-            'data' => $products,
-            'message' => 'Success get all products'
-        ], 200);
+        $q = $request->query('q');
+
+        $products = Product::with('category')
+            ->when($q, fn($query) => $query->where('name', 'like', "%{$q}%"))
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('admin-page.products.index', compact('products', 'q'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $categories = Category::orderBy('name')->get();
+        return view('admin-page.products.create', compact('categories'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreProductRequest $request)
+    public function store(StoreProductRequest $storeProductRequest)
     {
         DB::beginTransaction();
         try {
-            $product = Product::create([
-                'name' => $request->name,
-                'price' => $request->price,
-                'stock_quantity' => $request->stock_quantity,
-            ]);
+            $data = $storeProductRequest->validated();
+
+            if ($storeProductRequest->hasFile('image')) {
+                $data['image'] = $storeProductRequest->file('image')->store('products', 'public');
+            }
+
+            Product::create($data);
+
             DB::commit();
-            return response()->json([
-                'data' => $product,
-                'message' => 'Product created successfully'
-            ], 200);
-        }  catch (\Exception $e) {
+            return redirect()
+                ->route('admin.products.index')
+                ->with('success', 'Product berhasil ditambahkan.');
+        } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json([
-                'message' => 'Failed to create product',
-                'error' => $e->getMessage()
-            ], 400);
+            return redirect()
+                ->route('admin.products.create')
+                ->with('error', 'Gagal menambahkan product: ' . $th->getMessage())
+                ->withInput();
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Product $product)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Product $product)
     {
-        //
+        $categories = Category::orderBy('name')->get();
+        return view('admin-page.products.edit', compact('product', 'categories'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateProductRequest $request, Product $product)
+    public function update(UpdateProductRequest $updateProductRequest, Product $product)
     {
         DB::beginTransaction();
         try {
-            $product->update([
-                'name' => $request->name,
-                'price' => $request->price,
-                'stock_quantity' => $request->stock_quantity,
-            ]);
+            $data = $updateProductRequest->validated();
+
+            if ($updateProductRequest->hasFile('image')) {
+                // hapus gambar lama (jika ada)
+                if ($product->image) {
+                    Storage::disk('public')->delete($product->image);
+                }
+                $data['image'] = $updateProductRequest->file('image')->store('products', 'public');
+            }
+
+            $product->update($data);
+
             DB::commit();
-            return response()->json([
-                'data' => $product,
-                'message' => 'Product updated successfully'
-            ], 200);
-        }  catch (\Exception $e) {
+            return redirect()
+                ->route('admin.products.index')
+                ->with('success', 'Product berhasil diperbarui.');
+        } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json([
-                'message' => 'Failed to update product',
-                'error' => $e->getMessage()
-            ], 400);
+            return redirect()
+                ->route('admin.products.edit', $product->id)
+                ->with('error', 'Gagal update product: ' . $th->getMessage())
+                ->withInput();
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Product $product)
     {
         DB::beginTransaction();
         try {
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image);
+            }
+
             $product->delete();
+
             DB::commit();
-            return response()->json([
-                'message' => 'Product deleted successfully'
-            ], 200);
-        }  catch (\Exception $e) {
+            return redirect()
+                ->route('admin.products.index')
+                ->with('success', 'Product berhasil dihapus.');
+        } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json([
-                'message' => 'Failed to delete product',
-                'error' => $e->getMessage()
-            ], 400);
+            return redirect()
+                ->route('admin.products.index')
+                ->with('error', 'Gagal menghapus product: ' . $th->getMessage());
         }
     }
 }
