@@ -10,14 +10,57 @@
 </head>
 <body class="bg-light">
 
-<nav class="navbar navbar-expand-lg bg-white border-bottom">
+@php
+    $is = fn($name) => request()->routeIs($name) ? 'active' : '';
+@endphp
+
+{{-- Sidebar Offcanvas (PINDAHKAN KE ATAS NAVBAR) --}}
+<div class="offcanvas offcanvas-start show border-end"
+     data-bs-scroll="true"
+     data-bs-backdrop="false"
+     tabindex="-1"
+     id="adminSidebar"
+     aria-labelledby="adminSidebarLabel"
+     style="width: 260px;">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title fw-bold" id="adminSidebarLabel">Menu</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+
+    <div class="offcanvas-body p-0">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item list-group-item-action {{ $is('admin.dashboard') }}"
+               href="{{ route('admin.dashboard') }}">Dashboard</a>
+
+            <a class="list-group-item list-group-item-action {{ $is('admin.products.*') }}"
+               href="{{ route('admin.products.index') }}">Products</a>
+
+            <a class="list-group-item list-group-item-action {{ $is('admin.categories.*') }}"
+               href="{{ route('admin.categories.index') }}">Categories</a>
+
+            <a class="list-group-item list-group-item-action {{ $is('admin.users.*') }}"
+               href="{{ route('admin.users.index') }}">Users</a>
+        </div>
+    </div>
+</div>
+
+{{-- Navbar (tetap pakai admin-shell) --}}
+<nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top admin-shell">
     <div class="container-fluid">
+        <button class="btn btn-outline-secondary me-2"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#adminSidebar"
+                aria-controls="adminSidebar">
+            ☰
+        </button>
+
         <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="{{ route('admin.dashboard') }}">
             <img src="{{ asset('images/klikku-logo.png') }}" alt="Klikku" style="height:28px;width:auto;">
             <span>Admin KlikkuStore</span>
         </a>
 
-        <div class="d-flex align-items-center gap-2">
+        <div class="d-flex align-items-center gap-2 ms-auto">
             <span class="text-secondary small d-none d-md-inline">
                 Hi, <span class="fw-semibold">{{ auth()->user()->name }}</span>
             </span>
@@ -32,43 +75,11 @@
     </div>
 </nav>
 
-<div class="container-fluid">
-    <div class="row">
-        {{-- Sidebar --}}
-        <aside class="col-lg-2 d-none d-lg-block bg-white border-end min-vh-100 p-0">
-            @php
-                $is = fn($name) => request()->routeIs($name) ? 'active' : '';
-            @endphp
-
-            <div class="p-3">
-                <div class="text-uppercase small text-secondary mb-2">Menu</div>
-
-                <div class="list-group list-group-flush">
-                    <a class="list-group-item list-group-item-action {{ $is('admin.dashboard') }}"
-                       href="{{ route('admin.dashboard') }}">
-                        Dashboard
-                    </a>
-
-                    {{-- nanti kita sambungkan ke route bener --}}
-                    <a class="list-group-item list-group-item-action {{ $is('admin.products.*') }}" href="#">
-                        Products
-                    </a>
-                    <a class="list-group-item list-group-item-action {{ $is('admin.categories.*') }}" href="#">
-                        Categories
-                    </a>
-                    <a class="list-group-item list-group-item-action {{ $is('admin.users.*') }}" href="#">
-                        Users
-                    </a>
-                </div>
-            </div>
-        </aside>
-
-        {{-- Content --}}
-        <main class="col-12 col-lg-10 p-4">
-            @yield('content')
-        </main>
-    </div>
+{{-- Content (TETAP ADMIN-CONTENT, tidak diubah) --}}
+<div class="admin-content p-4">
+    @yield('content')
 </div>
 
 </body>
+
 </html>

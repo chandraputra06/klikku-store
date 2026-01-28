@@ -2,7 +2,11 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserController;
+use App\Models\Category;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -29,10 +33,22 @@ Route::middleware(['auth', 'role:1'])
     ->group(function () {
 
         Route::get('/dashboard', function () {
-            return view('admin-page.dashboard.index');
+            $totalProducts = Product::count();
+            $outOfStock = Product::where('stock_quantity', '<=', 0)->count();
+            $totalUsers = User::count();
+            $totalCategories = Category::count();
+
+            return view('admin-page.dashboard.index', compact(
+                'totalProducts',
+                'outOfStock',
+                'totalUsers',
+                'totalCategories'
+            ));
         })->name('dashboard');
 
         Route::resource('categories', CategoryController::class)->except(['show']);
+        Route::resource('products', ProductController::class)->except(['show']);
+        Route::resource('users', UserController::class)->except(['show']);
         // nanti kita isi:
         // Route::resource('products', ProductAdminController::class);
         // Route::resource('categories', CategoryAdminController::class);

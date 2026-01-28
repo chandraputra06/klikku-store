@@ -12,4 +12,9 @@ class Product extends Model
     use HasFactory, SoftDeletes;
 
     protected $guarded = [];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 }

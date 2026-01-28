@@ -25,3 +25,12 @@
   display: block;
   margin: 0 auto;
 }
+
+.admin-content {
+  margin-left: 260px;
+  transition: margin-left .2s ease;
+}
+
+.offcanvas:not(.show) ~ .admin-content {
+  margin-left: 0;
+}

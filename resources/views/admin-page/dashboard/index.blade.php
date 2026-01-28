@@ -1,4 +1,4 @@
-@extends('admin-page.layouts.main')
+@extends('admin-page.layout.main')
 
 @section('title', 'Dashboard - Admin KlikkuStore')
 
@@ -8,10 +8,10 @@
     use App\Models\User;
     use App\Models\Category;
 
-    $totalProducts = class_exists(Product::class) ? Product::count() : 0;
-    $outOfStock = class_exists(Product::class) ? Product::where('stock_quantity', '<=', 0)->count() : 0;
-    $totalUsers = class_exists(User::class) ? User::count() : 0;
-    $totalCategories = class_exists(Category::class) ? Category::count() : 0;
+    $totalProducts = Product::count();
+    $outOfStock = Product::where('stock_quantity', '<=', 0)->count();
+    $totalUsers = User::count();
+    $totalCategories = Category::count();
 @endphp
 
 <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-4">
@@ -63,7 +63,7 @@
     <div class="card-body">
         <div class="fw-semibold mb-1">Next step</div>
         <div class="text-secondary">
-            Setelah ini kita sambungkan menu sidebar dan bikin CRUD Categories → Products → Users.
+            Lanjut bikin ringkasan produk terbaru & stok menipis + shortcut ke menu Products/Categories/Users.
         </div>
     </div>
 </div>
