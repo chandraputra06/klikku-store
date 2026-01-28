@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ShopController;
 use App\Http\Controllers\UserController;
 use App\Models\Category;
 use App\Models\Product;
@@ -23,8 +24,12 @@ Route::post('/logout', [AuthController::class, 'logout'])
 
 Route::get('/', function () {
     $products = Product::latest()->take(8)->get();
-    return view('layouts.main', ['products' => $products]);
+    return view('pages.home', ['products' => $products]); 
+    // return view('layouts.main', ['products' => $products]);
 })->name('homepage');
+
+Route::get('/products', [ShopController::class, 'index'])->name('shop.products.index');
+Route::get('/products/{product}', [ShopController::class, 'show'])->name('shop.products.show');
 
 // Admin Panel (hanya role 1 = Admin)
 Route::middleware(['auth', 'role:1'])
