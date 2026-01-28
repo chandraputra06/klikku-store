@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,7 @@ Route::middleware(['auth', 'role:1'])
             return view('admin-page.dashboard.index');
         })->name('dashboard');
 
+        Route::resource('categories', CategoryController::class)->except(['show']);
         // nanti kita isi:
         // Route::resource('products', ProductAdminController::class);
         // Route::resource('categories', CategoryAdminController::class);
