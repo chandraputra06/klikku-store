@@ -16,12 +16,9 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top">
     <div class="container">
-        <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="/">
-            <img
-                src="images/klikku-logo.png"
-                alt="Klikku Store"
-                class="brand-logo"
-            >
+        <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{{ route('homepage') }}">
+            <img src="{{ asset('images/klikku-logo.png') }}" alt="Klikku Store" class="brand-logo">
+            <span class="fs-5">Klikku<span class="text-primary">Store</span></span>
         </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain"
@@ -41,13 +38,29 @@
                 <button class="btn btn-outline-primary" type="submit">Search</button>
             </form>
 
-            <div class="d-flex gap-2 ms-lg-3 mt-3 mt-lg-0">
-                <a href="#" class="btn btn-outline-secondary">Masuk</a>
-                <a href="#" class="btn btn-primary">Daftar</a>
+            <div class="d-flex gap-2 ms-lg-3 mt-3 mt-lg-0 align-items-center">
+                @auth
+                    @if((string) auth()->user()->role === '1')
+                        <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-primary">Admin</a>
+                    @endif
+
+                    <span class="text-secondary small d-none d-lg-inline">
+                        Hi, <span class="fw-semibold">{{ auth()->user()->name }}</span>
+                    </span>
+
+                    <form method="POST" action="{{ route('auth.logout') }}" class="mb-0">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-danger">Logout</button>
+                    </form>
+                @else
+                    <a href="{{ route('auth.login-page') }}" class="btn btn-outline-secondary">Masuk</a>
+                    <a href="{{ route('auth.register-page') }}" class="btn btn-primary">Daftar</a>
+                @endauth
             </div>
         </div>
     </div>
 </nav>
+
 
 <!-- Hero -->
 <header id="home" class="py-5">
