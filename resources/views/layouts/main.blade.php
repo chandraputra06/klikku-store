@@ -41,8 +41,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link"
-                       href="{{ request()->routeIs('homepage') ? '#why' : route('homepage').'#why' }}">
+                    <a class="nav-link {{ request()->routeIs('about') ? 'active' : '' }}"
+                    href="{{ route('about') }}">
                         Tentang Kami
                     </a>
                 </li>

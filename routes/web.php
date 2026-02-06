@@ -31,6 +31,8 @@ Route::get('/', function () {
 Route::get('/products', [ShopController::class, 'index'])->name('shop.products.index');
 Route::get('/products/{product}', [ShopController::class, 'show'])->name('shop.products.show');
 
+Route::view('/about', 'pages.about')->name('about');
+
 // Admin Panel (hanya role 1 = Admin)
 Route::middleware(['auth', 'role:1'])
     ->prefix('admin')
