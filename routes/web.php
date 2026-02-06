@@ -40,18 +40,32 @@ Route::middleware(['auth', 'role:1'])
     ->group(function () {
 
         Route::get('/dashboard', function () {
-            $totalProducts = Product::count();
-            $outOfStock = Product::where('stock_quantity', '<=', 0)->count();
-            $totalUsers = User::count();
-            $totalCategories = Category::count();
+        $totalProducts = Product::count();
+        $outOfStock = Product::where('stock_quantity', '<=', 0)->count();
+        $totalUsers = User::count();
+        $totalCategories = Category::count();
 
-            return view('admin-page.dashboard.index', compact(
-                'totalProducts',
-                'outOfStock',
-                'totalUsers',
-                'totalCategories'
-            ));
-        })->name('dashboard');
+        $latestProducts = Product::with('category')
+            ->latest()
+            ->take(5)
+            ->get();
+
+        $lowStockProducts = Product::with('category')
+            ->where('stock_quantity', '>', 0)
+            ->where('stock_quantity', '<=', 5) // threshold stok menipis
+            ->orderBy('stock_quantity')
+            ->take(5)
+            ->get();
+
+        return view('admin-page.dashboard.index', compact(
+            'totalProducts',
+            'outOfStock',
+            'totalUsers',
+            'totalCategories',
+            'latestProducts',
+            'lowStockProducts'
+        ));
+    })->name('dashboard');
 
         Route::resource('categories', CategoryController::class)->except(['show']);
         Route::resource('products', ProductController::class)->except(['show']);
