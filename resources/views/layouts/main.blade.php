@@ -16,10 +16,15 @@
 {{-- Navbar --}}
 <nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top">
     <div class="container">
-        <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{{ route('homepage') }}">
-            <img src="{{ asset('images/klikku-logo.png') }}" alt="Klikku Store" class="brand-logo">
-            <span class="fs-5">Klikku<span class="text-primary">Store</span></span>
-        </a>
+        <div class="d-flex flex-column align-items-center d-lg-flex d-none">
+            <a class="navbar-brand fw-semibold d-flex align-items-center gap-2 d-flex flex-column align-items-center d-lg-flex d-none" href="{{ route('homepage') }}">
+                <img src="{{ asset('images/klikku-logo.png') }}" alt="Klikku Store" class="brand-logo">
+                <span class="text-primary small d-none d-lg-inline">
+                    {{ auth()->user()->name }}
+            </span>
+            </a>
+            
+        </div>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain"
             aria-controls="navMain" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,21 +53,11 @@
                 </li>
             </ul>
 
-            <form class="d-flex gap-2" role="search" method="GET" action="{{ route('shop.products.index') }}">
-                <input class="form-control" type="search" name="q" value="{{ request('q') }}"
-                       placeholder="Cari produk..." aria-label="Search">
-                <button class="btn btn-outline-primary" type="submit">Search</button>
-            </form>
-
             <div class="d-flex gap-2 ms-lg-3 mt-3 mt-lg-0 align-items-center">
                 @auth
                     @if((string) auth()->user()->role === '1')
                         <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-primary">Admin</a>
                     @endif
-
-                    <span class="text-secondary small d-none d-lg-inline">
-                        Hi, <span class="fw-semibold">{{ auth()->user()->name }}</span>
-                    </span>
 
                     <form method="POST" action="{{ route('auth.logout') }}" class="mb-0">
                         @csrf

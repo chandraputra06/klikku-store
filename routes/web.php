@@ -33,7 +33,7 @@ Route::get('/products/{product}', [ShopController::class, 'show'])->name('shop.p
 
 Route::view('/about', 'pages.about')->name('about');
 
-// Admin Panel (hanya role 1 = Admin)
+// Admin page (hanya role 1 = Admin)
 Route::middleware(['auth', 'role:1'])
     ->prefix('admin')
     ->name('admin.')
@@ -52,7 +52,7 @@ Route::middleware(['auth', 'role:1'])
 
         $lowStockProducts = Product::with('category')
             ->where('stock_quantity', '>', 0)
-            ->where('stock_quantity', '<=', 5) // threshold stok menipis
+            ->where('stock_quantity', '<=', 5) // alert untuk stok menipis
             ->orderBy('stock_quantity')
             ->take(5)
             ->get();
@@ -70,8 +70,4 @@ Route::middleware(['auth', 'role:1'])
         Route::resource('categories', CategoryController::class)->except(['show']);
         Route::resource('products', ProductController::class)->except(['show']);
         Route::resource('users', UserController::class)->except(['show']);
-        // nanti kita isi:
-        // Route::resource('products', ProductAdminController::class);
-        // Route::resource('categories', CategoryAdminController::class);
-        // Route::resource('users', UserAdminController::class)->except(['show']);
     });

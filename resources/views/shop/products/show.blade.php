@@ -53,7 +53,7 @@
 
             <div class="fw-semibold">Info</div>
             <div class="text-secondary">
-                Deskripsi produk bisa kamu tambahkan nanti (misal kolom <code>description</code>).
+                TAMBAHIN NANTIII AAAJAJAA
             </div>
         </div>
     </div>

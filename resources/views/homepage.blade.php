@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Klikku Store</title>
 
-    <!-- Styles / Scripts -->
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
@@ -31,11 +30,6 @@
                 <li class="nav-item"><a class="nav-link" href="#products">Produk</a></li>
                 <li class="nav-item"><a class="nav-link" href="#why">Kenapa Kami</a></li>
             </ul>
-
-            <form class="d-flex gap-2" role="search" action="#" method="GET">
-                <input class="form-control" type="search" name="q" placeholder="Cari produk..." aria-label="Search">
-                <button class="btn btn-outline-primary" type="submit">Search</button>
-            </form>
 
             <div class="d-flex gap-2 ms-lg-3 mt-3 mt-lg-0">
                 <a href="#" class="btn btn-outline-secondary">Masuk</a>

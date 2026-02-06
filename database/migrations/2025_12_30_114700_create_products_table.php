@@ -18,14 +18,10 @@ return new class extends Migration
                 ->nullable()
                 ->constrained('categories')
                 ->nullOnDelete();
-
             $table->string('name');
             $table->decimal('price', 8, 2);
             $table->integer('stock_quantity');
-
-            // simpan path file (contoh: products/abc.jpg)
             $table->string('image')->nullable();
-
             $table->timestamps();
             $table->softDeletes();
         });

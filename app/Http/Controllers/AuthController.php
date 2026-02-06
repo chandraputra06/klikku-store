@@ -58,7 +58,7 @@ class AuthController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'role' => '2', // default customer
+            'role' => '2', // default untuk customer
         ]);
 
         Auth::login($user);
