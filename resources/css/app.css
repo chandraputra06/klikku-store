@@ -12,9 +12,10 @@
         "Noto Color Emoji";
 }
 
-.brand-logo{
-  height: 42px;
-  width: auto;
+.brand-logo {
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
 }
 
 /* Hero image */

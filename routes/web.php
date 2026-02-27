@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\UserController;
@@ -32,6 +34,22 @@ Route::get('/products', [ShopController::class, 'index'])->name('shop.products.i
 Route::get('/products/{product}', [ShopController::class, 'show'])->name('shop.products.show');
 
 Route::view('/about', 'pages.about')->name('about');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/{product}', [CartController::class, 'store'])->name('cart.store');
+    Route::put('/cart/{productId}', [CartController::class, 'update'])->name('cart.update');
+    Route::delete('/cart/{productId}', [CartController::class, 'destroy'])->name('cart.destroy');
+    Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
+
+    Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout.index');
+    Route::post('/checkout', [CartController::class, 'checkoutStore'])->name('checkout.store');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'index'])->name('profile.index');
+    Route::put('/profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+});
 
 // Admin page (hanya role 1 = Admin)
 Route::middleware(['auth', 'role:1'])

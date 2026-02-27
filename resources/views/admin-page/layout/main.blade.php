@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'Admin - KlikkuStore')</title>
     <link rel="icon" type="image/png" href="{{ asset('images/klikku-logo.png') }}">
-
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-light">
@@ -14,72 +13,68 @@
     $is = fn($name) => request()->routeIs($name) ? 'active' : '';
 @endphp
 
-{{-- Sidebar Offcanvas (PINDAHKAN KE ATAS NAVBAR) --}}
-<div class="offcanvas offcanvas-start show border-end"
-     data-bs-scroll="true"
-     data-bs-backdrop="false"
-     tabindex="-1"
-     id="adminSidebar"
-     aria-labelledby="adminSidebarLabel"
-     style="width: 260px;">
-    <div class="offcanvas-header border-bottom">
-        <h5 class="offcanvas-title fw-bold" id="adminSidebarLabel">Menu</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-
-    <div class="offcanvas-body p-0">
-        <div class="list-group list-group-flush">
-            <a class="list-group-item list-group-item-action {{ $is('admin.dashboard') }}"
-               href="{{ route('admin.dashboard') }}">Dashboard</a>
-
-            <a class="list-group-item list-group-item-action {{ $is('admin.products.*') }}"
-               href="{{ route('admin.products.index') }}">Products</a>
-
-            <a class="list-group-item list-group-item-action {{ $is('admin.categories.*') }}"
-               href="{{ route('admin.categories.index') }}">Categories</a>
-
-            <a class="list-group-item list-group-item-action {{ $is('admin.users.*') }}"
-               href="{{ route('admin.users.index') }}">Users</a>
+<div class="d-flex">
+    {{-- Sidebar --}}
+    <aside class="bg-white border-end d-flex flex-column"
+           style="width: 260px; min-height: 100vh;">
+        
+        {{-- Top: Logo + user --}}
+        <div class="p-3 border-bottom">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <img src="{{ asset('images/klikku-logo.png') }}" alt="Klikku" style="height:32px;width:auto;">
+                <div class="fw-bold">KlikkuStore</div>
+            </div>
+            <div class="small text-secondary">Login sebagai</div>
+            <div class="fw-semibold">{{ auth()->user()->name }}</div>
         </div>
-    </div>
-</div>
 
-{{-- Navbar (tetap pakai admin-shell) --}}
-<nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top admin-shell">
-    <div class="container-fluid">
-        <button class="btn btn-outline-secondary me-2"
-                type="button"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#adminSidebar"
-                aria-controls="adminSidebar">
-            ☰
-        </button>
+        {{-- Menu --}}
+        <div class="p-3 flex-grow-1">
+            <div class="small text-uppercase text-secondary mb-2">Menu</div>
 
-        <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="{{ route('admin.dashboard') }}">
-            <img src="{{ asset('images/klikku-logo.png') }}" alt="Klikku" style="height:28px;width:auto;">
-            <span>Admin KlikkuStore</span>
-        </a>
+            <div class="list-group list-group-flush">
+                <a class="list-group-item list-group-item-action {{ $is('admin.dashboard') }}"
+                   href="{{ route('admin.dashboard') }}">
+                    <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                </a>
 
-        <div class="d-flex align-items-center gap-2 ms-auto">
-            <span class="text-secondary small d-none d-md-inline">
-                Hi, <span class="fw-semibold">{{ auth()->user()->name }}</span>
-            </span>
+                <a class="list-group-item list-group-item-action {{ $is('admin.products.*') }}"
+                   href="{{ route('admin.products.index') }}">
+                    <i class="bi bi-box-seam me-2"></i> Products
+                </a>
 
-            <a href="{{ route('homepage') }}" class="btn btn-outline-secondary btn-sm">Ke Beranda</a>
+                <a class="list-group-item list-group-item-action {{ $is('admin.categories.*') }}"
+                   href="{{ route('admin.categories.index') }}">
+                    <i class="bi bi-tags me-2"></i> Categories
+                </a>
 
-            <form method="POST" action="{{ route('auth.logout') }}" class="mb-0">
+                <a class="list-group-item list-group-item-action {{ $is('admin.users.*') }}"
+                   href="{{ route('admin.users.index') }}">
+                    <i class="bi bi-people me-2"></i> Users
+                </a>
+            </div>
+        </div>
+
+        {{-- Bottom actions --}}
+        <div class="p-3 border-top d-grid gap-2">
+            <a href="{{ route('homepage') }}" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-house-door me-1"></i> Beranda
+            </a>
+
+            <form method="POST" action="{{ route('auth.logout') }}">
                 @csrf
-                <button class="btn btn-outline-danger btn-sm">Logout</button>
+                <button class="btn btn-outline-danger btn-sm w-100">
+                    <i class="bi bi-box-arrow-right me-1"></i> Logout
+                </button>
             </form>
         </div>
-    </div>
-</nav>
+    </aside>
 
-{{-- Content (TETAP ADMIN-CONTENT, tidak diubah) --}}
-<div class="admin-content p-4">
-    @yield('content')
+    {{-- Content --}}
+    <main class="flex-grow-1 p-4" style="min-width: 0;">
+        @yield('content')
+    </main>
 </div>
 
 </body>
-
 </html>
